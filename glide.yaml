@@ -1,0 +1,8 @@
+package: github.com/gtfx/go-microservices/registry
+import:
+- package: github.com/hashicorp/consul
+  version: v1.0.7
+  subpackages:
+  - api
+- package: github.com/segmentio/ksuid
+  version: 1.0.1

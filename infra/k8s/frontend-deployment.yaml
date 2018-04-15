@@ -16,5 +16,6 @@ spec:
         env:
         - name: FRONTEND_PORT
           value: "8000"
+        command: ["./frontend"]
         ports:
         - containerPort: 8000 

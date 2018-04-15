@@ -2,18 +2,21 @@ FROM golang:1.10
 
 ARG app
 ENV APP=$app
+ENV GODIR=/go/src/github.com/gtfx/go-microservices/
 
+RUN mkdir -p $GODIR/$APP
 
-#RUN mkdir -p /go/src/github.com/gtfx/microservices/frontend
-RUN mkdir -p /go/src/github.com/gtfx/microservices/$APP
+COPY glide.* $GODIR
+RUN go get github.com/Masterminds/glide
 
-#COPY ./frontend/ /go/src/github.com/gtfx/microservices/frontend/
-COPY ./$APP/ /go/src/github.com/gtfx/microservices/$APP/
+WORKDIR $GODIR
+RUN glide install
 
-WORKDIR /go/src/github.com/gtfx/microservices/
+COPY . $GODIR
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o bin/$APP ./$APP
 
 FROM alpine
-#RUN apk --no-cache add ca-certificates
+ENV GODIR=/go/src/github.com/gtfx/go-microservices/
+
 WORKDIR /root
-COPY --from=0 /go/src/github.com/gtfx/microservices/bin/$APP .
+COPY --from=0 $GODIR/bin/$APP .
