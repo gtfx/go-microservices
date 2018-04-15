@@ -1,10 +1,21 @@
+FRONTEND_APP=frontend
+BACKEND_APP=backend
 
 all:
-	GOOS=linux GOARCH=arm go build -o frontend/frontend ./frontend
+	build-frontend
+	push-frontend
 
-build-frontend:
-	docker build -t frontend:latest .
 
-push-frontend:
+frontend-build:
+	docker build --build-arg app=${FRONTEND_APP} -t frontend:latest .
+
+frontend-push:
 	docker tag frontend:latest localhost:5000/frontend:latest
 	docker push localhost:5000/frontend:latest
+
+backend-build:
+	docker build --build-arg app=${BACKEND_APP} -t backend:latest .
+
+backend-push:
+	docker tag backend:latest localhost:5000/backend:latest
+	docker push localhost:5000/backend:latest
